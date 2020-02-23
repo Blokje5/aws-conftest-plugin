@@ -1,0 +1,7 @@
+name: "aws"
+version: "0.1.0"
+usage: conftest aws [TYPE] [NAME] [FLAGS]
+description: |-
+  A Conftest plugin for validating AWS resources with Open Policy Agent.
+  Usage: conftest aws [TYPE] [NAME] [FLAGS]
+command: python $CONFTEST_PLUGIN_DIR/main.py
