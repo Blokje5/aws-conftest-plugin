@@ -39,8 +39,9 @@ def cli(ctx):
     default=False,
     help="Print the ec2 instance output instead of running a test against it",
 )
+@click.option("--policy", default="policy", help="path to the policy dir")
 @click.pass_context
-def ec2(ctx, instance_id, output):
+def ec2(ctx, instance_id, output, policy):
     client = boto3.client("ec2")
     response = client.describe_instances(
         Filters=[{"Name": "instance-id", "Values": [instance_id]}]
@@ -49,12 +50,12 @@ def ec2(ctx, instance_id, output):
     if output:
         click.echo(json.dumps(instance, indent=4, default=default))
     else:
-        call_conftest(json.dumps(instance, default=default))
+        call_conftest(json.dumps(instance, default=default), policy)
 
 
-def call_conftest(input):
+def call_conftest(input, policy):
     p = subprocess.Popen(
-        ["conftest", "test", "--input", "json", "-"],
+        ["conftest", "test", "--input", "json", "--policy", policy, "-"],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         stdin=subprocess.PIPE,
